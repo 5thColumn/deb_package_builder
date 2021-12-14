@@ -1,0 +1,37 @@
+name: 'Debian Package Builder'
+description: 'Generates A Debian package based on inputs provided in action set.'
+branding:
+  icon: 'package'
+  color: 'gray-dark'
+
+inputs:
+  src_dir:
+    description: 'Directory that houses file & directory structure that will be injected into the package'
+    required: true
+    default: "${{ github.workspace }}/package_root"
+  version:
+    description: 'Version of the package to build'
+    required: true
+  name:
+    description: 'The debian package name'
+    required: true
+  arch:
+    description: 'The debian package architecture to build towards'
+    required: true
+    default: "all"
+  dependencies:
+    description: 'A list of debian packages to add as dependencies'
+    required: false
+  binary_dir:
+    description: 'Directory to write the created package to'
+    required: true
+    default: "${{ github.workspace }}/debian_packages/"
+outputs:
+  binary_package_path:
+    description: 'The path where the package is built and saved to in the target workspace'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - build-pkg
