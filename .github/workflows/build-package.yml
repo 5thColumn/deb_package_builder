@@ -1,0 +1,27 @@
+name: Build Debian Package
+
+on:
+  release:
+    types: [ published ]
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build
+      uses: ./
+      id: container
+      with:
+        src_dir: 'package_root'
+        output_dir: 'output'
+        package_description: 'Demo package for build test'
+        package_depends: 'package1 package2'
+        package_name: "demo-package"
+        #package_version: "${{ github.ref }}"
+        package_version: 1.0.0
+        package_arch: 'all'
+        package_maintainer: 'UncommonX Inc.'
