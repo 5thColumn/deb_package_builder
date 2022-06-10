@@ -4,7 +4,6 @@ from deb_pkg_tools import control, package
 control
 
 src_dir =  os.getenv("INPUT_SRC_DIR")
-out_dir =  os.getenv("INPUT_OUT_DIR")
 out_dir =  os.getenv("INPUT_BINARY_DIR")
 depends = os.getenv("INPUT_PACKAGE_DEPENDS")
 version = os.path.basename(os.getenv("INPUT_PACKAGE_VERSION"))
@@ -55,6 +54,11 @@ control_fields={
 control.create_control_file(control_file=f"{src_dir}/DEBIAN/control",control_fields=control_fields)
 if os.path.isdir(f"{src_dir}/DEBIAN/control"):
     print('exists')
+
+if not os.path.isdir(f"{out_dir}"): 
+    os.mkdir(f"{out_dir}")
+
+
 print(package_name)
 print(version)
 print(src_dir)

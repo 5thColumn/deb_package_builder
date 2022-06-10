@@ -17,7 +17,7 @@ jobs:
       id: container
       with:
         src_dir: 'package_root'
-        output_dir: 'output'
+        binary_dir: 'debian_packages'
         package_description: 'Demo package for build test'
         package_depends: 'package1 package2'
         package_name: "demo-package"
