@@ -1,7 +1,7 @@
 import os
+import time
 from platform import architecture
 from deb_pkg_tools import control, package
-control
 
 src_dir =  os.getenv("INPUT_SRC_DIR")
 out_dir =  os.getenv("INPUT_BINARY_DIR")
@@ -11,6 +11,9 @@ package_name = os.getenv("INPUT_PACKAGE_NAME")
 description = os.getenv("INPUT_PACKAGE_DESCRIPTION")
 maintainer = os.getenv("INPUT_PACKAGE_MAINTAINER")
 arch = os.getenv("INPUT_PACKAGE_ARCH")
+
+if not version.isnumeric():
+    version=time.time()
 
     # # Binary control file fields.
     # CaseInsensitiveKey('Breaks'),
