@@ -13,7 +13,7 @@ maintainer = os.getenv("INPUT_PACKAGE_MAINTAINER")
 arch = os.getenv("INPUT_PACKAGE_ARCH")
 
 if not version.isnumeric():
-    version=time.time()
+    version=str(int(time.time()))
 
     # # Binary control file fields.
     # CaseInsensitiveKey('Breaks'),
