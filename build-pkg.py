@@ -3,71 +3,42 @@ import time
 from platform import architecture
 from deb_pkg_tools import control, package
 
-src_dir =  os.getenv("INPUT_SRC_DIR")
+def throw_exception(tgt):
+    raise Exception(f"{tgt} is a required option.")
+
+src_dir =  os.getenv("INPUT_SRC_DIR") or throw_exception('src_dir')
 out_dir =  os.getenv("INPUT_BINARY_DIR")
 depends = os.getenv("INPUT_PACKAGE_DEPENDS")
-version = os.path.basename(os.getenv("INPUT_PACKAGE_VERSION"))
-package_name = os.getenv("INPUT_PACKAGE_NAME")
-description = os.getenv("INPUT_PACKAGE_DESCRIPTION")
-maintainer = os.getenv("INPUT_PACKAGE_MAINTAINER")
-arch = os.getenv("INPUT_PACKAGE_ARCH")
+version = os.path.basename(os.getenv("INPUT_PACKAGE_VERSION")) or throw_exception('package_version')
+package_name = os.getenv("INPUT_PACKAGE_NAME") or throw_exception('package_name')
+description = os.getenv("INPUT_PACKAGE_DESCRIPTION") or throw_exception('package_description')
+maintainer = os.getenv("INPUT_PACKAGE_MAINTAINER") or throw_exception('package_maintainer')
+arch = os.getenv("INPUT_PACKAGE_ARCH") or throw_exception('package_arch')
 
+#Let's change the version to a string or conjour one up if not a release number
 if not version.isnumeric():
     version=str(int(time.time()))
 
-    # # Binary control file fields.
-    # CaseInsensitiveKey('Breaks'),
-    # CaseInsensitiveKey('Conflicts'),
-    # CaseInsensitiveKey('Depends'),
-    # CaseInsensitiveKey('Enhances'),
-    # CaseInsensitiveKey('Pre-Depends'),
-    # CaseInsensitiveKey('Provides'),
-    # CaseInsensitiveKey('Recommends'),
-    # CaseInsensitiveKey('Replaces'),
-    # CaseInsensitiveKey('Suggests'),
-    # # Source control file fields.
-    # CaseInsensitiveKey('Build-Conflicts'),
-    # CaseInsensitiveKey('Build-Conflicts-Arch'),
-    # CaseInsensitiveKey('Build-Conflicts-Indep'),
-    # CaseInsensitiveKey('Build-Depends'),
-    # CaseInsensitiveKey('Build-Depends-Arch'),
-    # CaseInsensitiveKey('Build-Depends-Indep'),
-    # CaseInsensitiveKey('Built-Using'),
-# Package: revolver
-# Priority: Required
-# Version: 1.0.17
-# Section: admin
-# Maintainer: Ryan Pisani <rpisani@5thcolumn.net>
-# Depends: sudo, nginx, python3-pip, libldap2-dev, libsasl2-dev, git, curl, cron, dialog, libsystemd-dev
-# Architecture: all
-# Description: Provides 5thColumn's Revolver configuration & management utility 
-# Replaces: revolver
-    # CaseInsensitiveKey('Architecture'),
-    # CaseInsensitiveKey('Description'),
-    # CaseInsensitiveKey('Maintainer'),
-    # CaseInsensitiveKey('Package'),
-    # CaseInsensitiveKey('Version'),
+#The default control_fields
 control_fields={
     "architecture": arch,
     "package": package_name,
     "version": version,
     "description": description,
-    "maintainer": maintainer
+    "maintainer": maintainer,
+    "replaces": package_name
 }
-control.create_control_file(control_file=f"{src_dir}/DEBIAN/control",control_fields=control_fields)
-if os.path.isdir(f"{src_dir}/DEBIAN/control"):
-    print('exists')
 
+#Add depends list if it was set
+if depends:
+    control_fields.update({ "depends": depends})
+
+#Create the control file
+control.create_control_file(control_file=f"{src_dir}/DEBIAN/control",control_fields=control_fields)
+
+#If the output directory doesn't exist, let's create it
 if not os.path.isdir(f"{out_dir}"): 
     os.mkdir(f"{out_dir}")
 
-
-print(package_name)
-print(version)
-print(src_dir)
-print(depends)
-print(os.listdir())
-if os.path.isdir(src_dir):
-    print("Path exists")
-print("hello")
+#Build the package
 package.build_package(directory=src_dir,repository=out_dir)
