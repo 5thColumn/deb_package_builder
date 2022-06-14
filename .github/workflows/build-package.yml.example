@@ -13,15 +13,24 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build
-      uses: ./
+      uses: 5thColumn/deb_package_builder@v1.0.0
       id: container
       with:
         src_dir: 'package_root'
-        binary_dir: 'debian_packages'
-        package_description: 'Demo package for build test'
+        output_dir: 'output'
+        package_description: 'A Debian Package'
         package_depends: 'package1 package2'
-        package_name: "demo-package"
-        #package_version: "${{ github.ref }}"
-        package_version: 1.0.0
+        package_name: "my-demo-package"
+        package_version: "${{ github.ref }}"
         package_arch: 'all'
-        package_maintainer: 'UncommonX Inc.'
+        package_maintainer: 'Some Developer or Organization'
+    - name: Upload
+      uses: actions/upload-artifact@v3
+      with:
+        name: debian_packages
+        path: ./debian_packages/
+    - name: Add & Commit
+      uses: EndBug/add-and-commit@v9.0.0
+      with:
+        add: './debian_packages'
+
