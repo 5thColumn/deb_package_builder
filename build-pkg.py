@@ -16,8 +16,8 @@ maintainer = os.getenv("INPUT_PACKAGE_MAINTAINER") or throw_exception('package_m
 arch = os.getenv("INPUT_PACKAGE_ARCH") or throw_exception('package_arch')
 
 #Let's change the version to a string or conjour one up if not a release number
-#if not version[0].isdigit():
-#    version=f"{str(int(time.time()))}-{version}"
+if not version[0].isdigit():
+    version=f"{str(int(time.time()))}-{version}"
 
 #The default control_fields
 control_fields={
