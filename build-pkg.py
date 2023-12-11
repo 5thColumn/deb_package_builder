@@ -11,6 +11,7 @@ out_dir =  os.getenv("INPUT_BINARY_DIR")
 depends = os.getenv("INPUT_PACKAGE_DEPENDS")
 version = os.path.basename(os.getenv("INPUT_PACKAGE_VERSION")) or throw_exception('package_version')
 package_name = os.getenv("INPUT_PACKAGE_NAME") or throw_exception('package_name')
+replaces = os.getenv("INPUT_PACKAGE_REPLACES", package_name)
 description = os.getenv("INPUT_PACKAGE_DESCRIPTION") or throw_exception('package_description')
 maintainer = os.getenv("INPUT_PACKAGE_MAINTAINER") or throw_exception('package_maintainer')
 arch = os.getenv("INPUT_PACKAGE_ARCH") or throw_exception('package_arch')
@@ -26,7 +27,7 @@ control_fields={
     "version": version,
     "description": description,
     "maintainer": maintainer,
-    "replaces": package_name
+    "replaces": replaces
 }
 
 #Add depends list if it was set
